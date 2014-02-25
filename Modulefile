@@ -1,0 +1,11 @@
+name		'juniorsysadmin-dnscache'
+version		'0.0.1' 
+source		'git://github.com/juniorsysadmin/juniorsysadmin-dnscache.git'
+author		'Ben Spiccia'
+summary		'Module for installing dnscache'
+description 	'Install and manage dnscache'
+license     	'Apache License, Version 2.0'
+
+dependency  'puppetlabs/apt', '>= 1.4.0'
+dependency  'stahnma/epel', '>=0.0.6'
+dependency  'puppetlabs/stdlib', '>= 2.2.1'
