@@ -15,6 +15,9 @@
 
 The dnscache module installs, configures and manages the dnscache service.
 
+[![Build
+Status](https://secure.travis-ci.org/juniorsysadmin/juniorsysadmin-dnscache.png)](http://travis-ci.org/juniorsysadmin/juniorsysadmin-dnscache)
+
 ##Module Description
 
 The dnscache module handles installing, configuring and running dnscache on
