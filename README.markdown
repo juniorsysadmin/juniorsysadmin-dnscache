@@ -38,8 +38,8 @@ could pose a problem with DNS if dnscache is not started after the package
 is installed.
 
 The Debian / Ubuntu version of dnscache also does not support
-multiple listen addresses and this module will fail if listen_ip(#listen_ip)
- has more than one value.
+multiple listen addresses and this module will fail if [listen_ip](#listen_ip)
+has more than one value.
 
 This module also does not perform any checks to ensure that the users and
 groups used in the provided parameters already exist.
