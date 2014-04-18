@@ -21,7 +21,8 @@ Status](https://secure.travis-ci.org/juniorsysadmin/juniorsysadmin-dnscache.png)
 ##Module Description
 
 The dnscache module handles installing, configuring and running dnscache on
-Fedora, CentOS/Redhat and Debian/Ubuntu.
+CentOS/Redhat, Debian, Fedora and Ubuntu. On Debian the version from
+Unstable is used.
 
 ##Setup
 
@@ -29,22 +30,29 @@ Fedora, CentOS/Redhat and Debian/Ubuntu.
 
 * dnscache-run / ndjbdns package
 * ndjbdns configuration file
-* dnscache ENVIRONMENT files
+* dnscache environment files
 * dnscache service
 
-WARNING: Debian/Ubuntu modifies /etc/resolv.conf to point to 127.0.0.1 which
+Note: Debian/Ubuntu modifies /etc/resolv.conf to point to 127.0.0.1 which
 could pose a problem with DNS if dnscache is not started after the package
 is installed.
 
+The Debian / Ubuntu version of dnscache also does not support
+multiple listen addresses and this module will fail if listen_ip(#listen_ip_
+has more than one value.
+
+This module also does not perform any checks to ensure that the users and
+groups used in the provided parameters already exist.
+
 ###Beginning with dnscache
 
-`include '::dnscache'` sets dnscache to listen on $::ipaddress and accept DNS
+`include '::dnscache'` sets dnscache to listen on 127.0.0.1 and accept DNS
 queries coming from 127.0.0.1. If you want to dnscache to accept DNS queries
 from say a local network, then:
 
 ```puppet
 class { '::dnscache':
-  accept_ip => [ '127.0.0.1', '192.168.1' ],
+  accept_net => [ '127.0.0.1', '192.168.1' ],
 }
 ```
 
@@ -53,8 +61,6 @@ class { '::dnscache':
 All interaction with the dnscache module can be done through the main dnscache
 class. This means you can simply toggle the options in `::dnscache` to have
 full functionality of the module.
-
-Put the classes, types, and resources for customizing, configuring, and doing the fancy stuff with your module here. 
 
 ##Reference
 
@@ -129,13 +135,18 @@ DEBUG_LEVEL dnscache environment variable.
 
 ####`dnscache_account`
 
-Account under which dnscache is invoked via ${dnscache_root/env/run
+Account under which dnscache is invoked via ${dnscache_root/env/run .
 Defaults to Gdnscache.
 
 ####`dnscache_root`
 
 ROOT dnscache environment variable. Defaults to /etc/sv/dnscache/root on
 osfamily Debian or /etc/ndjbdns on osfamily Redhat
+
+####`dnscache_service_dir`
+
+Service directory for dnscache used by daemontools.
+Defaults to /etc/sv/dnscache.
 
 ####`env_group`
 
@@ -157,7 +168,7 @@ osfamily: Debian and Redhat. Defaults to 0.
 
 ####`forwardonly`
 
-FORWARDONLY dnscache environment variable. Defaults to undef.
+FORWARDONLY dnscache environment variable. Defaults to undefined (nil).
 
 ####`gid`
 
@@ -165,7 +176,7 @@ gid that will be acquired by dnscache. Defaults to 2.
 
 ####`hidettl`
 
-HIDETTL dnscache environment variable. Defaults to undef.
+HIDETTL dnscache environment variable. Defaults to undefined (nil).
 
 ####`ipsend`
 
@@ -173,12 +184,17 @@ IPSEND dnscache environment variable. Defaults to 0.0.0.0
 
 ####`listen_ip`
 
-IP dnscache environment variable. Defaults to $::ipaddress
+IP dnscache environment variable. Defaults to 127.0.0.1
 
 ####`log_account`
 
 Account that will be used to run multilog for dnscache. Must have a UID and
 GID. Defaults to Gdnslog.
+
+####`log_mode`
+
+Permissions for the /var/log/dnscache folder (osfamily: Debian)
+Defaults to 0755 .
 
 ####`mergequeries`
 
@@ -191,8 +207,14 @@ or a specific version. Defaults to present.
 
 ####`package_name`
 
-Determines the name of the package to install. Defaults to dnscache-run on
-osfamily Debian or ndjbdns on osfamily Redhat.
+Determines the name of the package(s) to install. Defaults to ['dnscache-run']
+on osfamily Debian or ['ndjbdns'] on osfamily Redhat. If you wish to use the
+dnscache binary from Debian's dbndns package, use ['dbndns', 'dnscache-run'] .
+
+####`root_servers_source`
+
+Source for the file that should contain the list of DNS root servers or if
+FORWARDONLY is used, the list of caching servers to query.
 
 ####`service_enable`
 
@@ -201,6 +223,10 @@ Determines if the service should be enabled at boot. Defaults to true.
 ####`service_ensure`
 
 Determines if the service should be running or not. Defaults to running.
+
+####`service_manage`
+
+Selects whether Puppet should manage the service. Defaults to true.
 
 ####`service_name`
 
@@ -211,23 +237,17 @@ dnscache.
 
 uid that will be acquired by dnscache. Defaults to 2.
 
-####`use_dbndns`
-
-Unused and reserved for future use should we want to use the Debian dbndns
-package rather than dnscache-run
-
 
 ##Limitations
 
-This module has been build on and tested against Puppet 2.7 and higher.
+This module has been built on and tested against Puppet 2.7 and higher.
 
 This module has been tested on:
 
-* Arch Linux
 * CentOS 5/6
-* Debian 7/8
-* Fedora 19/20
-* Ubuntu 14.04
+* Debian 7
+* Fedora 20
+* Ubuntu 10.04/12.04/14.04
 
 ##Development
 

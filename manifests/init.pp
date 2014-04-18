@@ -74,6 +74,10 @@
 #   Defaults to /etc/sv/dnscache/root (osfamily: Debian) or
 #   /etc/ndjbdns (osfamily: Redhat)
 #
+# [*dnscache_service_dir*]
+#  Service directory for dnscache used by daemontools
+#  Defaults to /etc/dnscache (osfamily: Debian)
+#
 # [*env_group*]
 #   Group for dnscache environment files placed in ${dnscache_root}/env
 #   (osfamily: Debian) and also $accept_net IPs placed in ${dnscache_root}/ip/
@@ -94,7 +98,7 @@
 #
 # [*forwardonly*]
 #   FORWARDONLY dnscache environment variable
-#   Defaults to undef
+#   Defaults to undefined (nil)
 #
 # [*gid*]
 #   gid that will be acquired by dnscache (osfamily: Redhat)
@@ -102,7 +106,7 @@
 #
 # [*hidettl*]
 #   HIDETTL dnscache environment variable
-#   Defaults to undef
+#   Defaults to undefined (nil)
 #
 # [*ipsend*]
 #   IPSEND dnscache environment variable
@@ -110,12 +114,16 @@
 #
 # [*listen_ip*]
 #   IP dnscache environment variable
-#   Defaults to $::ipaddress
+#   Defaults to ['127.0.0.1']
 #
 # [*log_account*]
 #   Account that will be used to run multilog for dnscache. Must have a UID
 #   and GID (osfamily: Debian)
 #   Defaults to Gdnslog
+#
+# [*log_mode*]
+#   Permissions for the /var/log/dnscache folder (osfamily: Debian)
+#   Defaults to 0755
 #
 # [*mergequeries*]
 #   MERGEQUERIES dnscache environment variable (osfamily: Redhat)
@@ -126,8 +134,20 @@
 #   'latest', or a specific version. Defaults to present.
 #
 # [*package_name*]
-#   Determines the name of the package to install. Defaults to dnscache-run
-#   (osfamily: Debian) or ndjbdns (osfamily Redhat).
+#   Determines the name of the package(s) to install. Defaults to
+#   ['dnscache-run'] on osfamily Debian or ['ndjbdns'] on osfamily Redhat.
+#   If you wish to use the dnscache binary from Debian's dbndns package, use
+#   ['dbndns', 'dnscache-run'] .
+#
+# [*root_servers*]
+#   Path for the file that lists the DNS root servers, or if FORWARDONLY
+#   is set, the list of caching servers to query. Defaults to
+#   /etc/sv/dnscache/root/servers/@ (osfamily: Debian) or
+#   /etc/ndjbdns/servers/roots (osfamily: Redhat)
+#
+# [*root_servers_source*]
+#   Source for the file that should contain the list of DNS root servers
+#   or if FORWARDONLY is used, the list of caching servers to query.
 #
 # [*service_enable*]
 #   Determines if the service should be enabled at boot. Defaults to true.
@@ -140,6 +160,10 @@
 #
 # [*service_hasstatus*]
 #   Default dependent on $::operatingsystem
+#
+# [*service_manage*]
+#   Manage the service with Puppet.
+#   Defaults to true
 #
 # [*service_name*]
 #   Selects the name of the dnscache service for Puppet to manage. Defaults to
@@ -158,10 +182,6 @@
 #   placed in a conf file like ndjbdns or the original djbdns environment file
 #   layout is being used
 #   Defaults to true (osfamily: Redhat) or false (osfamily: Debian)
-#
-# [*use_dbndns*]
-#   Unused and reserved for future use should we want to use the Debian dbndns
-#   package rather than dnscache-run
 
 class dnscache (
   $accept_net                      = $dnscache::params::accept_net,
@@ -179,6 +199,7 @@ class dnscache (
   $debug_level                     = $dnscache::params::debug_level,
   $dnscache_account                = $dnscache::params::dnscache_account,
   $dnscache_root                   = $dnscache::params::dnscache_root,
+  $dnscache_service_dir            = $dnscache::params::dnscache_service_dir,
   $env_group                       = $dnscache::params::env_group,
   $env_mode                        = $dnscache::params::env_mode,
   $env_owner                       = $dnscache::params::env_owner,
@@ -188,21 +209,26 @@ class dnscache (
   $ipsend                          = $dnscache::params::ipsend,
   $listen_ip                       = $dnscache::params::listen_ip,
   $log_account                     = $dnscache::params::log_account,
+  $log_mode                        = $dnscache::params::log_mode,
   $mergequeries                    = $dnscache::params::mergequeries,
   $package_ensure                  = $dnscache::params::package_ensure,
   $package_name                    = $dnscache::params::package_name,
+  $root_servers                    = $dnscache::params::root_servers,
+  $root_servers_source             = $dnscache::params::root_servers_source,
   $service_enable                  = $dnscache::params::service_enable,
   $service_ensure                  = $dnscache::params::service_ensure,
   $service_hasrestart              = $dnscache::params::service_hasrestart,
   $service_hasstatus               = $dnscache::params::service_hasstatus,
+  $service_manage                  = $dnscache::params::service_manage,
   $service_name                    = $dnscache::params::service_name,
   $service_provider                = $dnscache::params::service_provider,
   $uid                             = $dnscache::params::uid,
   $uses_conf_file                  = $dnscache::params::uses_conf_file,
-  $use_dbndns                      = $dnscache::params::use_dbndns
 ) inherits dnscache::params {
 
   validate_bool($uses_conf_file)
+
+  # These checks are for the Redhat osfamily only
 
   if $uses_conf_file {
 
@@ -212,29 +238,38 @@ class dnscache (
     validate_string($config_file_owner)
     validate_string($config_file_template)
 
-    if !is_integer($debug_level) {
-      fail("${debug_level} is not an integer.")
+    if $debug_level != nil {
+      validate_re($debug_level, '[1]{1}')
     }
 
     validate_string($gid)
+    validate_array($listen_ip)
 
-    if (!is_integer($mergequeries)) {
-    fail("${mergequeries} is not an integer.")
+    if $mergequeries != nill {
+      validate_re($mergequeries, '[1]{1}')
     }
 
     validate_string($uid)
 
   }
 
+  # These checks are for the Debian osfamily only
+
   else {
 
     validate_re($config_log_run_script_mode, '[0-7]{3}')
     validate_string($config_log_run_script_template)
     validate_string($dnscache_account)
+    validate_array($listen_ip)
+    if (size($listen_ip) != 1) {
+      fail("The dnscache package on a ${::osfamily} based system only supports one listening address.")
+    }
+
     validate_string($log_account)
-    validate_bool($use_dbndns)
 
   }
+
+  # These checks are for any osfamily
 
   validate_array($accept_net)
 
@@ -247,34 +282,39 @@ class dnscache (
   }
 
   validate_absolute_path($dnscache_root)
+  validate_absolute_path($dnscache_service_dir)
   validate_string($env_group)
   validate_re($env_mode, '[0-7]{3}')
   validate_string($env_owner)
 
   if $forwardonly != nil {
+    validate_re($forwardonly, '[1]{1}')
+    $forwardonlyfile = 'present'
+  }
 
-    if !is_integer($forwardonly) {
-    fail("${forwardonly} is not an integer.")
-    }
-
+  else {
+    $forwardonlyfile = 'absent'
   }
 
   if $hidettl != nil {
+    validate_re($hidettl, '[1]{1}')
+    $hidettlfile = 'present'
+  }
 
-    if !is_integer($hidettl) {
-    fail("${hidettl} is not an integer.")
-    }
-
+  else {
+    $hidettlfile = 'absent'
   }
 
   validate_string($ipsend)
-  validate_array($listen_ip)
   validate_string($package_ensure)
   validate_array($package_name)
+  validate_absolute_path($root_servers)
+  validate_string($root_servers_source)
   validate_bool($service_enable)
   validate_bool($service_enable)
   validate_bool($service_hasrestart)
-  validate_string($service_hasstatus)
+  validate_bool($service_hasstatus)
+  validate_bool($service_manage)
   validate_string($service_name)
   validate_string($service_provider)
 

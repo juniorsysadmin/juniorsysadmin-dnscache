@@ -3,5 +3,5 @@
 exec 2>&1
 exec <seed
 exec envdir ./env sh -c '
-  exec envuidgid <%= @dnscache::dnscache_account %> softlimit -o250 -d "$DATALIMIT" /usr/bin/dnscache
+  exec envuidgid <%= @dnscache_account %> softlimit -o250 -d "$DATALIMIT" /usr/bin/dnscache
 '

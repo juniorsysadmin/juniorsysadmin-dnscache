@@ -15,28 +15,32 @@ class dnscache::params {
   $config_run_script_template     = 'dnscache/dnscache-run.erb'
   $debug_level                    = '1'
   $dnscache_account               = 'Gdnscache'
+  $dnscache_service_dir           = '/etc/sv/dnscache'
   $env_group                      = '0'
   $env_mode                       = '0644'
   $env_owner                      = '0'
-  $forwardonly                    = undef
+  $forwardonly                    = nil
   $gid                            = '2'
-  $hidettl                        = undef
+  $hidettl                        = nil
   $ipsend                         = '0.0.0.0'
-  $listen_ip                      = $::ipaddress
+  $listen_ip                      = ['127.0.0.1']
   $log_account                    = 'Gdnslog'
+  $log_mode                       = '0755'
   $mergequeries                   = '1'
   $package_ensure                 = 'present'
+  $root_servers_source            = 'puppet:///modules/dnscache/root_servers'
   $service_enable                 = true
   $service_ensure                 = 'running'
+  $service_manage                 = true
   $uid                            = '2'
-  $use_dbndns                     = false
 
   case $::osfamily {
     'RedHat': {
       $cachesize            = '5000000'
       $datalimit            = '8000000'
       $dnscache_root        = '/etc/ndjbdns'
-      $package_name         = 'ndjbdns'
+      $package_name         = ['ndjbdns']
+      $root_servers         = '/etc/ndjbdns/servers/roots'
       $service_name         = 'dnscache'
       $uses_conf_file       = true
 
@@ -57,7 +61,8 @@ class dnscache::params {
       $cachesize            = '1000000'
       $datalimit            = '3000000'
       $dnscache_root        = '/etc/sv/dnscache/root'
-      $package_name         = 'dnscache-run'
+      $package_name         = ['dnscache-run']
+      $root_servers         = '/etc/sv/dnscache/root/servers/@'
       $service_name         = 'dnscache'
       $service_hasrestart   = true
       $service_hasstatus    = true
@@ -66,8 +71,7 @@ class dnscache::params {
     }
 
     default: {
-      fail("The ${module_name} module is not supported on a ${::osfamily}\
-         based system.")
+      fail("The ${module_name} module is not supported on a ${::osfamily} based system.")
     }
   }
 }

@@ -4,28 +4,26 @@
 #
 class dnscache::install inherits dnscache {
 
-  case $::osfamily {
-    'Redhat': {
-      if ($::operatingsystem != 'Fedora') {
-        include '::epel'
-        Class['::epel'] -> Package['dnscache']
-      }
+  if ($::osfamily == 'Redhat' and $::operatingsystem != 'Fedora') {
+    include '::epel'
+    Class['::epel'] -> Package['dnscache']
+  }
+
+  if ($::osfamily == 'Debian' and $::operatingsystem != 'Ubuntu') {
+    include '::apt'
+
+    if ! defined_with_params(Apt::Source['debian_unstable'], {'release' => 'unstable' }) {
+      include '::apt::debian::unstable'
     }
 
-    'Debian': {
-      if ($::operatingsystem != 'Ubuntu') {
-        include '::apt'
-        apt::force { 'dnscache-run':
-        release => 'unstable',
-        require => Apt::Source['debian_unstable'],
-        }
-        Class['::apt'] -> Package['dnscache']
-      }
+    Class['::apt'] -> Apt::Force[$dnscache::package_name]
+
+    apt::force { $dnscache::package_name:
+      release => 'unstable',
+      require => Apt::Source['debian_unstable'],
     }
 
-    default: {
-      fail("The ${module_name} module is not supported on a ${::osfamily}")
-    }
+    Apt::Force[$dnscache::package_name] -> Package['dnscache']
   }
 
   package { 'dnscache':

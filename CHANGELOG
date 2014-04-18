@@ -1,2 +1,26 @@
-2013-02-25 Release 0.0.1
+2014-04-18 Release 1.0.0
+- Test framework changes
+- Changed listen_ip to be 127.0.0.1
+- Fixed setting of certain variables to nil rather than undef
+- Bumped up required version of stdlib to one which has prefix function
+- Added service_manage parameter
+- Changed package name to be dnscache-run for Debian
+- Removed single quoting of variables in service.pp
+- Fixed dnscache.conf template typos
+- Fixed accept_net variable parsing in config.pp
+- Fixed environment paths
+- Added a dnscache_service_dir variable for clarity
+- Added $root_servers and $root_servers_source variables for management of the
+  root DNS server list file / list of DNS caching servers with FORWARDONLY
+- Added check for Debian so that setting multiple listen addresses will fail
+  (Only ndjbdns's version has the relevant patch)
+- Simplified install.pp
+- Simplified validate() checks init.pp
+- Changed permissions for the ip folder to be 2755 rather than 0755
+- Removed use_dbndns variable and added a better description for $package_name
+- Added log_mode variable for permissions on the /var/log/dnscache folder
+- Added settings for ownership of /var/log/dnscache folder
+- Added dependency on svscan when running on Ubuntu
+- Added test skeleton
+2014-02-25 Release 0.0.1
 - Initial commit

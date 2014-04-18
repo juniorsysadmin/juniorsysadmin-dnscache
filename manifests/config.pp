@@ -2,117 +2,114 @@
 #
 class dnscache::config inherits dnscache {
 
+  File {
+    ensure => file,
+    group   => $dnscache::env_group,
+    mode    => $dnscache::env_mode,
+    owner   => $dnscache::env_owner,
+  }
+
+  # These settings are needed for the Redhat osfamily only
+
   if $dnscache::uses_conf_file {
 
     file { $dnscache::config_file:
-      ensure  => file,
+      content => template($dnscache::config_file_template),
+      group   => $dnscache::config_file_group,
       mode    => $dnscache::config_file_mode,
       owner   => $dnscache::config_file_owner,
-      group   => $dnscache::config_file_group,
-      content => template($dnscache::config_file_template),
     }
 
   }
+
+  # These settings are needed for the Debian osfamily only
 
   else {
 
-    file { "${dnscache::dnscache_root}/env/log/run":
-      ensure  => file,
-      owner   => $dnscache::config_file_owner,
+    # Daemontools run scripts
+
+    file { "${dnscache::dnscache_service_dir}/log/run":
+      content => template($dnscache::config_log_run_script_template),
       group   => $dnscache::config_file_group,
       mode    => $dnscache::config_log_run_script_mode,
-      content => template($dnscache::config_log_run_script_template),
+      owner   => $dnscache::config_file_owner,
     }
 
-    file { "${dnscache::dnscache_root}/env/run":
-      ensure  => file,
-      owner   => $dnscache::config_file_owner,
+    file { "${dnscache::dnscache_service_dir}/env/run":
+      content => template($dnscache::config_run_script_template),
       group   => $dnscache::config_file_group,
       mode    => $dnscache::config_run_script_mode,
-      content => template($dnscache::config_run_script_template),
+      owner   => $dnscache::config_file_owner,
     }
 
-    file { "${dnscache::dnscache_root}/env/CACHESIZE":
-      ensure  => file,
-      owner   => $dnscache::env_owner,
-      group   => $dnscache::env_group,
-      mode    => $dnscache::env_mode,
+    # Environment variables for the dnscache service
+
+    file { "${dnscache::dnscache_service_dir}/env/CACHESIZE":
       content => $dnscache::cachesize,
     }
 
-    file { "${dnscache::dnscache_root}/env/DATALIMIT":
-      ensure  => file,
-      owner   => $dnscache::env_owner,
-      group   => $dnscache::env_group,
-      mode    => $dnscache::env_mode,
+    file { "${dnscache::dnscache_service_dir}/env/DATALIMIT":
       content => $dnscache::datalimit,
     }
 
-    file { "${dnscache::dnscache_root}/env/IP":
-      ensure  => file,
-      owner   => $dnscache::env_owner,
-      group   => $dnscache::env_group,
-      mode    => $dnscache::env_mode,
+    file { "${dnscache::dnscache_service_dir}/env/IP":
       content => $dnscache::listen_ip,
     }
 
-    file { "${dnscache::dnscache_root}/env/IPSEND":
-      ensure  => file,
-      owner   => $dnscache::env_owner,
-      group   => $dnscache::env_group,
-      mode    => $dnscache::env_mode,
+    file { "${dnscache::dnscache_service_dir}/env/IPSEND":
       content => $dnscache::ipsend,
     }
 
-    file { "${dnscache::dnscache_root}/env/ROOT":
-      ensure  => file,
-      owner   => $dnscache::env_owner,
-      group   => $dnscache::env_group,
-      mode    => $dnscache::env_mode,
+    file { "${dnscache::dnscache_service_dir}/env/ROOT":
       content => $dnscache::dnscache_root,
     }
 
-    # Default is not to set these ENV variables
+    # The default is not to set these environment variables
     # and therefore have no file for them
 
-    if $dnscache::forwardonly != nil {
-
-      file { "${dnscache::dnscache_root}/env/FORWARDONLY":
-        ensure  => file,
-        owner   => $dnscache::env_owner,
-        group   => $dnscache::env_group,
-        mode    => $dnscache::env_mode,
-        content => $dnscache::forwardonly,
-      }
-
+    file { "${dnscache::dnscache_service_dir}/env/FORWARDONLY":
+      ensure  => $dnscache::forwardonlyfile,
+      content => $dnscache::forwardonly,
     }
 
-    if $dnscache::hidettl != nil {
+    file { "${dnscache::dnscache_service_dir}/env/HIDETTL":
+      ensure  => $dnscache::hidettlfile,
+      content => $dnscache::hidettl,
+    }
 
-      file { "${dnscache::dnscache_root}/env/HIDETTL":
-        ensure  => file,
-        owner   => $dnscache::env_owner,
-        group   => $dnscache::env_group,
-        mode    => $dnscache::env_mode,
-        content => $dnscache::hidettl,
-      }
+    # Log permissions
 
+    file { '/var/log/dnscache':
+      ensure => directory,
+      group  => 'adm',
+      mode   => '0755',
+      owner  => $dnscache::log_account,
     }
 
   }
+
+  # These settings are needed for any osfamily
+
+  file { "${dnscache::dnscache_root}/ip":
+    ensure  => 'directory',
+    mode    => '2755',
+    purge   => true,
+    recurse =>  true,
+  }
+
+  file { $dnscache::root_servers:
+    source => $dnscache::root_servers_source,
+  }
+
 
   # dnscache accepts requests from $accept_net sources
   # A service restart is not actually required when files in $dnscache_root
   # are changed, but the resource is placed here for simplicity
 
-  $accept_path = prefix("${dnscache::dnscache_root}/ip/",
-    $dnscache::accept_net)
+  $ip_path = "${dnscache::dnscache_root}/ip/"
+  $accept_path = prefix($dnscache::accept_net, $ip_path)
 
-  file { 'accepted_networks':
+  file { $accept_path:
     ensure  => present,
-    path    => $accept_path,
-    owner   => $dnscache::env_owner,
-    group   => $dnscache::env_group,
-    mode    => $dnscache::env_mode
   }
 }
