@@ -38,7 +38,7 @@ could pose a problem with DNS if dnscache is not started after the package
 is installed.
 
 The Debian / Ubuntu version of dnscache also does not support
-multiple listen addresses and this module will fail if listen_ip(#listen_ip_
+multiple listen addresses and this module will fail if [listen_ip](#listen_ip)
 has more than one value.
 
 This module also does not perform any checks to ensure that the users and
@@ -117,12 +117,23 @@ dnscache/dnscache.conf.erb
 ####`config_log_run_script_mode`
 
 File permissions for the ${dnscache_root}/log/run script that invokes
-dnscache. Defaults to 0755.
+multilog. Defaults to 0755.
+
+####`config_log_run_script_template`
+
+Location of the template that modifies the original script in
+${dnscache_root}/env/log/run
+Defaults to dnscache/dnscache-log-run.erb
+
+####`config_run_script_mode`
+File permissions for the ${dnscache_root}/log/run script that invokes
+dnscache
+Defaults to 0755
 
 ####`config_run_script_template`
 
 Location of the template that modifies the original script in
-${dnscache_root}/env/run Defraults to nscache/dnscache-run.erb
+${dnscache_root}/env/run Defaults to dnscache/dnscache-run.erb
 
 ####`datalimit`
 
@@ -131,7 +142,7 @@ value.
 
 ####`debug_level`
 
-DEBUG_LEVEL dnscache environment variable.
+DEBUG_LEVEL dnscache environment variable. Defaults to 1
 
 ####`dnscache_account`
 
@@ -184,7 +195,7 @@ IPSEND dnscache environment variable. Defaults to 0.0.0.0
 
 ####`listen_ip`
 
-IP dnscache environment variable. Defaults to 127.0.0.1
+IP dnscache environment variable. Defaults to ['127.0.0.1']
 
 ####`log_account`
 
