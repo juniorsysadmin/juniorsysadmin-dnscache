@@ -1,6 +1,6 @@
 # == Class: dnscache::params
 #
-# Defaut parameter values for the dnscache module
+# Default parameter values for the dnscache module
 #
 class dnscache::params {
   $accept_net                     = ['127.0.0.1']
