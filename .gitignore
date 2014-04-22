@@ -3,3 +3,4 @@ spec/fixtures
 pkg
 .rspec_system
 .bundle/
+metadata.json
