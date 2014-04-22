@@ -1,4 +1,4 @@
-2014-04-18 Release 1.0.0
+2014-04-22 Release 0.0.3
 - Test framework changes
 - Changed listen_ip to be 127.0.0.1
 - Fixed setting of certain variables to nil rather than undef
