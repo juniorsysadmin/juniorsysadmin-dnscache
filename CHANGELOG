@@ -1,4 +1,5 @@
-2014-04-22 Release 0.0.3
+2014-04-22 Release 0.0.4
+- Made a clearer project summary and fixed GitHub URLs
 - Test framework changes
 - Changed listen_ip to be 127.0.0.1
 - Fixed setting of certain variables to nil rather than undef
