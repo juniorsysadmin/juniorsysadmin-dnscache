@@ -110,6 +110,6 @@ class dnscache::config inherits dnscache {
   $accept_path = prefix($dnscache::accept_net, $ip_path)
 
   file { $accept_path:
-    ensure  => present,
+    ensure => file,
   }
 }

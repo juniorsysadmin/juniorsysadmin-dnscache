@@ -28,12 +28,12 @@ class dnscache::service inherits dnscache {
     }
 
     service { 'dnscache':
-      ensure      => $dnscache::service_ensure,
-      enable      => $dnscache::service_enable,
-      hasrestart  => $dnscache::service_hasrestart,
-      hasstatus   => $dnscache::service_hasstatus,
-      name        => $dnscache::service_name,
-      provider    => $dnscache::service_provider,
+      ensure     => $dnscache::service_ensure,
+      enable     => $dnscache::service_enable,
+      hasrestart => $dnscache::service_hasrestart,
+      hasstatus  => $dnscache::service_hasstatus,
+      name       => $dnscache::service_name,
+      provider   => $dnscache::service_provider,
     }
   }
 }
