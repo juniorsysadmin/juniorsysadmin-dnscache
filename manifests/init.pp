@@ -239,14 +239,14 @@ class dnscache (
     validate_string($config_file_template)
 
     if $debug_level != nil {
-      validate_re($debug_level, '[1]{1}')
+      validate_re($debug_level, '[0-3]{1}')
     }
 
     validate_string($gid)
     validate_array($listen_ip)
 
     if $mergequeries != nill {
-      validate_re($mergequeries, '[1]{1}')
+      validate_re($mergequeries, '[0-1]{1}')
     }
 
     validate_string($uid)
