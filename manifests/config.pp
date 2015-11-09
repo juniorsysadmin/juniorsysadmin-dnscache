@@ -98,7 +98,7 @@ class dnscache::config inherits dnscache {
   }
 
   file { $dnscache::root_servers:
-    source => $dnscache::root_servers_source,
+    content => join($dnscache::root_server_ips, "\n"),
   }
 
 

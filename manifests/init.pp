@@ -145,8 +145,8 @@
 #   /etc/sv/dnscache/root/servers/@ (osfamily: Debian) or
 #   /etc/ndjbdns/servers/roots (osfamily: Redhat)
 #
-# [*root_servers_source*]
-#   Source for the file that should contain the list of DNS root servers
+# [*root_server_ips*]
+#   Array of IPs that should contain the list of DNS root servers
 #   or if FORWARDONLY is used, the list of caching servers to query.
 #
 # [*service_enable*]
@@ -214,7 +214,7 @@ class dnscache (
   $package_ensure                  = $dnscache::params::package_ensure,
   $package_name                    = $dnscache::params::package_name,
   $root_servers                    = $dnscache::params::root_servers,
-  $root_servers_source             = $dnscache::params::root_servers_source,
+  $root_server_ips                 = $dnscache::params::root_server_ips,
   $service_enable                  = $dnscache::params::service_enable,
   $service_ensure                  = $dnscache::params::service_ensure,
   $service_hasrestart              = $dnscache::params::service_hasrestart,
@@ -309,7 +309,7 @@ class dnscache (
   validate_string($package_ensure)
   validate_array($package_name)
   validate_absolute_path($root_servers)
-  validate_string($root_servers_source)
+  validate_array($root_server_ips)
   validate_bool($service_enable)
   validate_bool($service_enable)
   validate_bool($service_hasrestart)
