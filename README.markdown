@@ -222,9 +222,9 @@ Determines the name of the package(s) to install. Defaults to ['dnscache-run']
 on osfamily Debian or ['ndjbdns'] on osfamily Redhat. If you wish to use the
 dnscache binary from Debian's dbndns package, use ['dbndns', 'dnscache-run'] .
 
-####`root_servers_source`
+####`root_server_ips`
 
-Source for the file that should contain the list of DNS root servers or if
+Array of IPs that should contain the list of DNS root servers or if
 FORWARDONLY is used, the list of caching servers to query.
 
 ####`service_enable`
