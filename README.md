@@ -21,8 +21,7 @@ Status](https://secure.travis-ci.org/juniorsysadmin/puppet-dnscache.png)](http:/
 ##Module Description
 
 The dnscache module handles installing, configuring and running dnscache on
-CentOS/Redhat, Debian, Fedora and Ubuntu. On Debian the version from
-Unstable is used.
+CentOS/Redhat, Fedora and Ubuntu.
 
 ##Setup
 
@@ -33,11 +32,11 @@ Unstable is used.
 * dnscache environment files
 * dnscache service
 
-Note: Debian/Ubuntu modifies /etc/resolv.conf to point to 127.0.0.1 which
+Note: Ubuntu modifies /etc/resolv.conf to point to 127.0.0.1 which
 could pose a problem with DNS if dnscache is not started after the package
 is installed.
 
-The Debian / Ubuntu version of dnscache also does not support
+The Ubuntu version of dnscache also does not support
 multiple listen addresses and this module will fail if [listen_ip](#listen_ip)
 has more than one value.
 
@@ -262,7 +261,6 @@ This module has been built on and tested against Puppet 2.7 and higher.
 This module has been tested on:
 
 * CentOS 5/6
-* Debian 7
 * Fedora 20
 * Ubuntu 10.04/12.04/14.04
 
