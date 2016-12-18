@@ -1,8 +1,3 @@
-# == Class: dnscache::service
-#
-# Class to manage the dnscache service
-#
-
 class dnscache::service inherits dnscache {
 
   if ! ($dnscache::service_ensure in [ 'running', 'stopped' ]) {

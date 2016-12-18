@@ -1,5 +1,3 @@
-# == Class: dnscache::config
-#
 class dnscache::config inherits dnscache {
 
   File {

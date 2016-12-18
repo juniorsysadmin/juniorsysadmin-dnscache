@@ -1,7 +1,3 @@
-# == Class: dnscache::params
-#
-# Default parameter values for the dnscache module
-#
 class dnscache::params {
   $accept_net                     = ['127.0.0.1']
   $config_file                    = '/etc/ndjbdns/dnscache.conf'

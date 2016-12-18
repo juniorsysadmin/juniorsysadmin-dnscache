@@ -1,7 +1,3 @@
-# == Class: dnscache::install
-#
-# Module to install dnscache.
-#
 class dnscache::install {
 
   package { 'dnscache':
