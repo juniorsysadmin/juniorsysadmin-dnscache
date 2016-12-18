@@ -52,7 +52,7 @@ class dnscache::params {
       $cachesize            = '5000000'
       $datalimit            = '8000000'
       $dnscache_root        = '/etc/ndjbdns'
-      $package_name         = ['ndjbdns']
+      $package_name         = 'ndjbdns'
       $root_servers         = '/etc/ndjbdns/servers/roots'
       $service_name         = 'dnscache'
       $uses_conf_file       = true
@@ -74,7 +74,7 @@ class dnscache::params {
       $cachesize            = '1000000'
       $datalimit            = '3000000'
       $dnscache_root        = '/etc/sv/dnscache/root'
-      $package_name         = ['dnscache-run']
+      $package_name         = 'dnscache-run'
       $root_servers         = '/etc/sv/dnscache/root/servers/@'
       $service_name         = 'dnscache'
       $service_hasrestart   = true

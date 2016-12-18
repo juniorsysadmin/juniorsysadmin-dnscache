@@ -2,7 +2,7 @@
 #
 # Module to install dnscache.
 #
-class dnscache::install inherits dnscache {
+class dnscache::install {
 
   package { 'dnscache':
     ensure => $dnscache::package_ensure,

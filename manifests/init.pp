@@ -122,7 +122,7 @@ class dnscache (
 
   validate_string($ipsend)
   validate_string($package_ensure)
-  validate_array($package_name)
+  validate_string($package_name)
   validate_absolute_path($root_servers)
   validate_array($root_server_ips)
   validate_bool($service_enable)

@@ -1,26 +1,27 @@
 require 'spec_helper_acceptance'
 
 describe 'dnscache class' do
-
   context 'default parameters' do
     # Using puppet_apply as a helper
-    it 'should work with no errors' do
+    # rubocop:disable RSpec/MultipleExpectations
+    it 'is expected to work with no errors' do
       pp = <<-EOS
       class { 'dnscache': }
       EOS
 
       # Run it twice and test for idempotency
-      expect(apply_manifest(pp).exit_code).to_not eq(1)
+      expect(apply_manifest(pp).exit_code).not_to eq(1)
       expect(apply_manifest(pp).exit_code).to eq(0)
     end
+    # rubocop:enable RSpec/MultipleExpectations
 
     describe package('dnscache') do
-      it { should be_installed }
+      it { is_expected.to be_installed }
     end
 
     describe service('dnscache') do
-      it { should be_enabled }
-      it { should be_running }
+      it { is_expected.to be_enabled }
+      it { is_expected.to be_running }
     end
   end
 end
