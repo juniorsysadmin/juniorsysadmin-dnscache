@@ -1,3 +1,12 @@
+## 2016-12-18 Release 0.1.0
+
+- Drops support Puppet 2.7
+- Require Puppet 3.8.7 or above
+- Drops Debian support
+- Removes epel as hard dependency
+- Enforces `package_name` as string and not array
+- Requires puppetlabs-stdlib 4.6.0 or greater
+
 ## 2014-04-22 Release 0.0.5
 
 - Made a clearer project summary and fixed GitHub URLs

@@ -1,6 +1,6 @@
 {
   "name": "juniorsysadmin-dnscache",
-  "version": "0.0.5",
+  "version": "0.1.0",
   "author": "juniorsysadmin",
   "summary": "Module for installing dnscache from D. J. Bernstein's djbdns",
   "license": "Apache-2.0",
