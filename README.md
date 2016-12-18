@@ -256,7 +256,7 @@ uid that will be acquired by dnscache. Defaults to 2.
 
 ##Limitations
 
-This module has been built on and tested against Puppet 2.7 and higher.
+This module has received limited testing against Puppet 3.8.7 and Puppet 4.x
 
 This module has been tested on:
 
