@@ -1,4 +1,5 @@
-2014-04-22 Release 0.0.5
+## 2014-04-22 Release 0.0.5
+
 - Made a clearer project summary and fixed GitHub URLs
 - Test framework changes
 - Changed listen_ip to be 127.0.0.1
@@ -23,5 +24,7 @@
 - Added settings for ownership of /var/log/dnscache folder
 - Added dependency on svscan when running on Ubuntu
 - Added test skeleton
-2014-02-25 Release 0.0.1
+
+## 2014-02-25 Release 0.0.1
+
 - Initial commit
