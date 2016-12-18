@@ -4,11 +4,6 @@
 #
 class dnscache::install inherits dnscache {
 
-  if ($::osfamily == 'Redhat' and $::operatingsystem != 'Fedora') {
-    include '::epel'
-    Class['::epel'] -> Package['dnscache']
-  }
-
   if ($::osfamily == 'Debian' and $::operatingsystem != 'Ubuntu') {
     include '::apt'
 

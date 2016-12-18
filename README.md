@@ -56,6 +56,12 @@ class { '::dnscache':
 }
 ```
 
+With CentOS/RedHat you need the epel repository
+```puppet
+include '::epel'
+Class['::epel'] -> Package['dnscache']
+```
+
 ##Usage
 
 All interaction with the dnscache module can be done through the main dnscache
