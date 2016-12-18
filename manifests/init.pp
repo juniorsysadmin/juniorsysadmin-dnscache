@@ -1,188 +1,3 @@
-# == Class: dnscache
-#
-# Module to install djbdns's dnscache from package.
-#
-# === Parameters
-#
-# [*accept_net*]
-#   An array listing of IP addresses or subnets that are written out to
-#   $dnscache_root/ip/ as separate files. The dnscache daemon accepts
-#   DNS requests from these IP/subnet addresses.
-#   Defaults to ['127.0.0.1']
-#
-# [*cachesize*]
-#   CACHESIZE dnscache environment variable
-#   Defaults to distribution default value.
-#
-# [*config_file*]
-#   Location of the dnscache.conf file used by ndjbdns (osfamily: Redhat)
-#   Defaults to /etc/ndjbdns/dnscache.conf
-#
-# [*config_file_group*]
-#   Group for the dnscache.conf file used by the ndjbdns package
-#   (osfamily: Redhat)
-#   Defaults to 0
-#
-# [*config_file_mode*]
-#   File permissions for /etc/ndjbdns/dnscache.conf (osfamily: Redhat)
-#   Defaults to 0644
-#
-# [*config_file_owner*]
-#   Owner of /etc/ndjbdns/dnscache.conf (osfamily: Redhat)
-#   Defaults to 0
-#
-# [*config_file_template*]
-#   Location of the template that modifies /etc/ndjbdns/dnscache.conf
-#   (osfamily: Redhat)
-#   Defaults to dnscache/dnscache.conf.erb
-#
-# [*config_log_run_script_mode*]
-#   File permissions for the ${dnscache_root}/env/run script that invokes
-#   multilog (osfamily: Debian)
-#   Defaults to 0755
-#
-# [*config_log_run_script_template*]
-#   Location of the template that modifies the original script in
-#   ${dnscache_root}/env/log/run (osfamily: Debian)
-#   Defaults to dnscache/dnscache-log-run.erb
-#
-# [*config_run_script_mode*]
-#   File permissions for the ${dnscache_root}/log/run script that invokes
-#   dnscache (osfamily: Debian)
-#   Defaults to 0755
-#
-# [*config_run_script_template*]
-#   Location of the template that modifies the original script in
-#   ${dnscache_root}/env/run (osfamily: Debian)
-#   Defaults to dnscache/dnscache-run.erb
-#
-# [*datalimit*]
-#   DATALIMIT dnscache environment variable
-#   Defaults to distribution default value.
-#
-# [*debug_level*]
-#   DEBUG_LEVEL dnscache environment variable (osfamily: Redhat)
-#   Defaults to 1
-#
-# [*dnscache_account*]
-#   Account under which dnscache is invoked via ${dnscache_root/env/run
-#   (osfamily: Debian)
-#   Defaults to Gdnscache
-#
-# [*dnscache_root*]
-#   ROOT dnscache environment variable
-#   Defaults to /etc/sv/dnscache/root (osfamily: Debian) or
-#   /etc/ndjbdns (osfamily: Redhat)
-#
-# [*dnscache_service_dir*]
-#  Service directory for dnscache used by daemontools
-#  Defaults to /etc/dnscache (osfamily: Debian)
-#
-# [*env_group*]
-#   Group for dnscache environment files placed in ${dnscache_root}/env
-#   (osfamily: Debian) and also $accept_net IPs placed in ${dnscache_root}/ip/
-#   (osfamily: Debian and Redhat)
-#   Defaults to 0
-#
-# [*env_mode*]
-#   File permissions for dnscache environment files placed in
-#   ${dnscache_root/env (osfamily: Debian) and also $accept_net IPs placed
-#   in ${dnscache_root}/ip/ (osfamily: Debian and Redhat)
-#   Defaults to 0644
-#
-# [*env_owner*]
-#   Owner of dnscache environment files placed in
-#   ${dnscache_root/env (osfamily: Debian) and also $accept_net IPs placed
-#   in ${dnscache_root}/ip/ (osfamily: Debian and Redhat)
-#   Defaults to 0
-#
-# [*forwardonly*]
-#   FORWARDONLY dnscache environment variable
-#   Defaults to undefined (nil)
-#
-# [*gid*]
-#   gid that will be acquired by dnscache (osfamily: Redhat)
-#   Defaults to 2
-#
-# [*hidettl*]
-#   HIDETTL dnscache environment variable
-#   Defaults to undefined (nil)
-#
-# [*ipsend*]
-#   IPSEND dnscache environment variable
-#   Defaults to '0.0.0.0'
-#
-# [*listen_ip*]
-#   IP dnscache environment variable
-#   Defaults to ['127.0.0.1']
-#
-# [*log_account*]
-#   Account that will be used to run multilog for dnscache. Must have a UID
-#   and GID (osfamily: Debian)
-#   Defaults to Gdnslog
-#
-# [*log_mode*]
-#   Permissions for the /var/log/dnscache folder (osfamily: Debian)
-#   Defaults to 0755
-#
-# [*mergequeries*]
-#   MERGEQUERIES dnscache environment variable (osfamily: Redhat)
-#   Defaults to 1
-#
-# [*package_ensure*]
-#   Sets the dnscache package to be installed. Can be set to 'present',
-#   'latest', or a specific version. Defaults to present.
-#
-# [*package_name*]
-#   Determines the name of the package(s) to install. Defaults to
-#   ['dnscache-run'] on osfamily Debian or ['ndjbdns'] on osfamily Redhat.
-#   If you wish to use the dnscache binary from Debian's dbndns package, use
-#   ['dbndns', 'dnscache-run'] .
-#
-# [*root_servers*]
-#   Path for the file that lists the DNS root servers, or if FORWARDONLY
-#   is set, the list of caching servers to query. Defaults to
-#   /etc/sv/dnscache/root/servers/@ (osfamily: Debian) or
-#   /etc/ndjbdns/servers/roots (osfamily: Redhat)
-#
-# [*root_server_ips*]
-#   Array of IPs that should contain the list of DNS root servers
-#   or if FORWARDONLY is used, the list of caching servers to query.
-#
-# [*service_enable*]
-#   Determines if the service should be enabled at boot. Defaults to true.
-#
-# [*service_ensure*]
-#   Determines if the service should be running or not. Defaults to running.
-#
-# [*service_hasrestart*]
-#   Default dependent on $::operatingsystem
-#
-# [*service_hasstatus*]
-#   Default dependent on $::operatingsystem
-#
-# [*service_manage*]
-#   Manage the service with Puppet.
-#   Defaults to true
-#
-# [*service_name*]
-#   Selects the name of the dnscache service for Puppet to manage. Defaults to
-#   dnscache
-#
-# [*service_provider*]
-#   Defaults to daemontools (osfamily: Debian), systemd
-#   (operatingsystem: Fedora) or redhat (osfamily: Redhat)
-#
-# [*uid*]
-#   uid that will be acquired by dnscache (osfamily: Redhat)
-#   Defaults to 2
-#
-# [*uses_conf_file*]
-#   Boolean to indicate whether most dnscache environment variables have been
-#   placed in a conf file like ndjbdns or the original djbdns environment file
-#   layout is being used
-#   Defaults to true (osfamily: Redhat) or false (osfamily: Debian)
-
 class dnscache (
   $accept_net                      = $dnscache::params::accept_net,
   $cachesize                       = $dnscache::params::cachesize,
@@ -238,14 +53,14 @@ class dnscache (
     validate_string($config_file_owner)
     validate_string($config_file_template)
 
-    if $debug_level != nil {
+    if $debug_level {
       validate_re($debug_level, '[0-3]{1}')
     }
 
     validate_string($gid)
     validate_array($listen_ip)
 
-    if $mergequeries != nill {
+    if $mergequeries {
       validate_re($mergequeries, '[0-1]{1}')
     }
 
@@ -287,7 +102,7 @@ class dnscache (
   validate_re($env_mode, '[0-7]{3}')
   validate_string($env_owner)
 
-  if $forwardonly != nil {
+  if $forwardonly {
     validate_re($forwardonly, '[1]{1}')
     $forwardonlyfile = 'present'
   }
@@ -296,7 +111,7 @@ class dnscache (
     $forwardonlyfile = 'absent'
   }
 
-  if $hidettl != nil {
+  if $hidettl {
     validate_re($hidettl, '[1]{1}')
     $hidettlfile = 'present'
   }
@@ -318,10 +133,12 @@ class dnscache (
   validate_string($service_name)
   validate_string($service_provider)
 
-  anchor { 'dnscache::begin': } ->
-  class { '::dnscache::install': } ->
-  class { '::dnscache::config': } ~>
-  class { '::dnscache::service': } ->
-  anchor { 'dnscache::end': }
+  contain '::dnscache::install'
+  contain '::dnscache::config'
+  contain '::dnscache::service'
+
+  Class['::dnscache::install'] ->
+  Class['::dnscache::config'] ~>
+  Class['::dnscache::service']
 
 }

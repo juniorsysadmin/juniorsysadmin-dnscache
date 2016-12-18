@@ -19,9 +19,9 @@ class dnscache::params {
   $env_group                      = '0'
   $env_mode                       = '0644'
   $env_owner                      = '0'
-  $forwardonly                    = nil
+  $forwardonly                    = undef
   $gid                            = '2'
-  $hidettl                        = nil
+  $hidettl                        = undef
   $ipsend                         = '0.0.0.0'
   $listen_ip                      = ['127.0.0.1']
   $log_account                    = 'Gdnslog'

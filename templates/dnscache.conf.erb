@@ -39,23 +39,23 @@ ROOT=<%= @dnscache_root %>
 
 # If HIDETTL is set, dnscache uses a TTL of 0 in its responses.
 #
-HIDETTL=<% if @hidettl != 'nil' %><%= @hidettl %><% end %>
+HIDETTL=<% if @hidettl %><%= @hidettl %><% end %>
 
 # If FORWARDONLY is set, dnscache treats the servers/roots as a list of IP
 # addresses for other caches, not root servers. It forwards queries to those
 # caches the same way a client does, rather than contacting a chain of servers
 # according to NS records.
 #
-FORWARDONLY=<% if @forwardonly != 'nil' %><%= @forwardonly %><% end %>
+FORWARDONLY=<% if @forwardonly %><%= @forwardonly %><% end %>
 
 # If MERGEQUERIES is set, dnscache would merge identical outgoing requests
 # into a single query and buffer requesting clients into local queue.
 # When response is received for the single query, the same is served to all
 # requesting clients.
 #
-MERGEQUERIES=<% if @mergequeries != 'nil' %><%= @mergequeries %><% end %>
+MERGEQUERIES=<% if @mergequeries %><%= @mergequeries %><% end %>
 
 # If DEBUG_LEVEL is set, dnscache displays helpful debug messages to
 # the console.
 #
-DEBUG_LEVEL=<% if @debug_level != 'nil' %><%= @debug_level %><% end %>
+DEBUG_LEVEL=<% if @debug_level %><%= @debug_level %><% end %>
